@@ -1,6 +1,6 @@
 package com.juulcrienen.githubapiwrapper;
 
-import com.juulcrienen.githubapiwrapper.helper.TemporaryFileHandler;
+import com.juulcrienen.githubapiwrapper.helpers.TemporaryFileHandler;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 

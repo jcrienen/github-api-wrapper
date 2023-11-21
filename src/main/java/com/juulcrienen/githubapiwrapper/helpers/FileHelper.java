@@ -1,4 +1,4 @@
-package com.juulcrienen.githubapiwrapper.helper;
+package com.juulcrienen.githubapiwrapper.helpers;
 
 import com.juulcrienen.githubapiwrapper.GitHubAPIWrapper;
 import org.eclipse.jgit.api.Git;
@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -22,9 +23,13 @@ public class FileHelper {
     public static List<File> getFiles(GHRepository repository, String branch, String extension) throws Exception {
         Path tempRepository = GitHubAPIWrapper.getTemporaryFileHandler().createTempDir(repository.getName());
 
+        String branchFull = "refs/heads/" + branch;
+
         Git git = Git.cloneRepository()
                 .setURI(repository.getHttpTransportUrl())
                 .setDirectory(tempRepository.toFile())
+                .setBranchesToClone(Arrays.asList(branchFull))
+                .setBranch(branchFull)
                 .call();
         git.close();
 

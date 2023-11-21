@@ -1,4 +1,4 @@
-package com.juulcrienen.githubapiwrapper.helper;
+package com.juulcrienen.githubapiwrapper.helpers;
 
 import org.apache.commons.io.FileUtils;
 
