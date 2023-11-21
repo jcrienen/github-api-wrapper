@@ -1,5 +1,6 @@
 package com.juulcrienen.githubapiwrapper;
 
+import com.juulcrienen.githubapiwrapper.helper.TemporaryFileHandler;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 
@@ -13,9 +14,14 @@ import java.util.List;
 public class GitHubAPIWrapper {
 
     private GitHub github;
+    private static TemporaryFileHandler temporaryFileHandler = new TemporaryFileHandler("github-api-wrapper");
 
     public GitHubAPIWrapper() throws IOException {
         github = GitHub.connectAnonymously();
+    }
+
+    public GitHubAPIWrapper(String username, String token) throws IOException {
+        github = GitHub.connect(username, token);
     }
 
     public GitHub getGitHub() {
@@ -24,6 +30,10 @@ public class GitHubAPIWrapper {
 
     public void setGithub(GitHub github) {
         this.github = github;
+    }
+
+    public static TemporaryFileHandler getTemporaryFileHandler() {
+        return temporaryFileHandler;
     }
 
     public GHRepository getGitHubRepository(String repository) throws IOException {
