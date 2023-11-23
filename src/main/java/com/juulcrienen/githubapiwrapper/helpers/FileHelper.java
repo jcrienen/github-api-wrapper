@@ -1,6 +1,7 @@
 package com.juulcrienen.githubapiwrapper.helpers;
 
 import com.juulcrienen.githubapiwrapper.GitHubAPIWrapper;
+import org.apache.commons.io.FilenameUtils;
 import org.eclipse.jgit.api.Git;
 import org.kohsuke.github.GHRepository;
 
@@ -37,7 +38,7 @@ public class FileHelper {
 
         try (Stream<Path> walk = Files.walk(tempRepository)) {
             files = walk
-                    .filter(f -> f.toString().endsWith(extension)).map(x -> x.toFile()).collect(Collectors.toList());
+                    .filter(f -> FilenameUtils.getExtension(f.toString()).equals(extension)).map(x -> x.toFile()).collect(Collectors.toList());
         } catch (IOException e) {
             e.printStackTrace();
         }
