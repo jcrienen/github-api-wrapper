@@ -18,10 +18,10 @@ import java.util.stream.Stream;
 public class FileHelper {
 
     public static List<File> getFiles(GHRepository repository, String... extension) throws Exception {
-        return getFiles(repository, repository.getDefaultBranch(), extension);
+        return getFiles(repository.getDefaultBranch(), repository, extension);
     }
 
-    public static List<File> getFiles(GHRepository repository, String branch, String... extension) throws Exception {
+    public static List<File> getFiles(String branch, GHRepository repository, String... extension) throws Exception {
         Path tempRepository = GitHubAPIWrapper.getTemporaryFileHandler().createTempDir(repository.getName());
 
         String branchFull = "refs/heads/" + branch;
