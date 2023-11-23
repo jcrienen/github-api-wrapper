@@ -1,5 +1,6 @@
 package com.juulcrienen.githubapiwrapper.helpers;
 
+import com.juulcrienen.githubapiwrapper.GitHubAPIWrapper;
 import org.apache.commons.io.FileUtils;
 
 import java.io.IOException;
@@ -12,9 +13,10 @@ public class TemporaryFileHandler {
 
     public TemporaryFileHandler(String prefix) {
         try {
-            tempDir = Files.createTempDirectory("github-api-wrapper");
+            GitHubAPIWrapper.debug("Creating temporary directory " + prefix);
+            tempDir = Files.createTempDirectory(prefix);
         } catch (IOException e) {
-            e.printStackTrace();
+            GitHubAPIWrapper.error(e.getMessage());
         }
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -29,9 +31,10 @@ public class TemporaryFileHandler {
     public Path createTempDir(String name) {
         Path temp = null;
         try {
+            GitHubAPIWrapper.debug("Creating temporary directory " + name);
             temp = Files.createTempDirectory(tempDir, name);
-        } catch (IOException ioException) {
-            ioException.printStackTrace();
+        } catch (IOException e) {
+            GitHubAPIWrapper.error(e.getMessage());
         }
 
         return temp;

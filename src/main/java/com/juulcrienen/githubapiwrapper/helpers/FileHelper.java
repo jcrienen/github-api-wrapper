@@ -26,6 +26,7 @@ public class FileHelper {
 
         String branchFull = "refs/heads/" + branch;
 
+        GitHubAPIWrapper.info("Cloning repository " + repository.getName() + " into " + tempRepository.getFileName());
         Git git = Git.cloneRepository()
                 .setURI(repository.getHttpTransportUrl())
                 .setDirectory(tempRepository.toFile())
@@ -37,10 +38,11 @@ public class FileHelper {
         List<File> files = new ArrayList<>();
 
         try (Stream<Path> walk = Files.walk(tempRepository)) {
+            GitHubAPIWrapper.debug("Searching file tree for files with extension " + extension);
             files = walk
                     .filter(f -> FilenameUtils.getExtension(f.toString()).equals(extension)).map(x -> x.toFile()).collect(Collectors.toList());
         } catch (IOException e) {
-            e.printStackTrace();
+            GitHubAPIWrapper.error(e.getMessage());
         }
 
         return files;

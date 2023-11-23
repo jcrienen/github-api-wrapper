@@ -4,24 +4,34 @@ import com.juulcrienen.githubapiwrapper.helpers.TemporaryFileHandler;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class GitHubAPIWrapper {
 
     private GitHub github;
     private static TemporaryFileHandler temporaryFileHandler = new TemporaryFileHandler("github-api-wrapper");
 
+    private static boolean debug;
+
     public GitHubAPIWrapper() throws IOException {
+        this(false);
+    }
+
+    public GitHubAPIWrapper(boolean debug) throws IOException {
         github = GitHub.connectAnonymously();
+        this.debug = debug;
     }
 
     public GitHubAPIWrapper(String username, String token) throws IOException {
+        this(username, token, false);
+    }
+
+    public GitHubAPIWrapper(String username, String token, boolean verbose) throws IOException {
         github = GitHub.connect(username, token);
+        this.debug = debug;
     }
 
     public GitHub getGitHub() {
@@ -37,13 +47,22 @@ public class GitHubAPIWrapper {
     }
 
     public GHRepository getGitHubRepository(String repository) throws IOException {
+        debug("Getting repository information for " + repository);
         return github.getRepository(repository);
     }
 
     public List<GHRepository> getGitHubRepositories(List<String> repositories) throws IOException{
         List<GHRepository> result = new ArrayList<>();
         for(String repo : repositories) {
-            result.add(github.getRepository(repo));
+            result.add(getGitHubRepository(repo));
+        }
+        return result;
+    }
+
+    public List<GHRepository> getGitHubRepositories(Set<String> repositories) throws IOException{
+        List<GHRepository> result = new ArrayList<>();
+        for(String repo : repositories) {
+            result.add(getGitHubRepository(repo));
         }
         return result;
     }
@@ -59,4 +78,16 @@ public class GitHubAPIWrapper {
         return getGitHubRepositories(repositories);
     }
 
+    public static void error(String msg) {
+        System.out.println("\u001B[31m" + msg);
+    }
+
+    public static void info(String msg) {
+        System.out.println("\u001B[0m" + msg);
+    }
+
+    public static void debug(String msg) {
+        if(!debug) return;
+        System.out.println("\u001B[36m" + msg);
+    }
 }
