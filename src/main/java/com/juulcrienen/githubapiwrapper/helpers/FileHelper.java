@@ -38,7 +38,7 @@ public class FileHelper {
         List<File> files = new ArrayList<>();
 
         try (Stream<Path> walk = Files.walk(tempRepository)) {
-            GitHubAPIWrapper.debug("Searching file tree for files with extension(s) " + extension.toString() + "...");
+            GitHubAPIWrapper.debug("Searching file tree for files with extension(s) " + Arrays.toString(extension) + "...");
             files = walk
                     .filter(f -> Arrays.stream(extension).anyMatch(FilenameUtils.getExtension(f.toString())::equals)).map(x -> x.toFile()).collect(Collectors.toList());
         } catch (IOException e) {
