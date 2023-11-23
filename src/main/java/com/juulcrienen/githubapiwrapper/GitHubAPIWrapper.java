@@ -47,7 +47,7 @@ public class GitHubAPIWrapper {
     }
 
     public GHRepository getGitHubRepository(String repository) throws IOException {
-        debug("Getting repository information for " + repository);
+        debug("Getting repository information for " + repository + "...");
         return github.getRepository(repository);
     }
 
