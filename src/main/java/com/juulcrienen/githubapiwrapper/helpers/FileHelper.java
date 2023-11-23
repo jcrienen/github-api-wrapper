@@ -17,11 +17,11 @@ import java.util.stream.Stream;
 
 public class FileHelper {
 
-    public static List<File> getFiles(GHRepository repository, String extension) throws Exception {
+    public static List<File> getFiles(GHRepository repository, String... extension) throws Exception {
         return getFiles(repository, repository.getDefaultBranch(), extension);
     }
 
-    public static List<File> getFiles(GHRepository repository, String branch, String extension) throws Exception {
+    public static List<File> getFiles(GHRepository repository, String branch, String... extension) throws Exception {
         Path tempRepository = GitHubAPIWrapper.getTemporaryFileHandler().createTempDir(repository.getName());
 
         String branchFull = "refs/heads/" + branch;
@@ -38,9 +38,9 @@ public class FileHelper {
         List<File> files = new ArrayList<>();
 
         try (Stream<Path> walk = Files.walk(tempRepository)) {
-            GitHubAPIWrapper.debug("Searching file tree for files with extension " + extension + "...");
+            GitHubAPIWrapper.debug("Searching file tree for files with extension(s) " + extension.toString() + "...");
             files = walk
-                    .filter(f -> FilenameUtils.getExtension(f.toString()).equals(extension)).map(x -> x.toFile()).collect(Collectors.toList());
+                    .filter(f -> Arrays.stream(extension).anyMatch(FilenameUtils.getExtension(f.toString())::equals)).map(x -> x.toFile()).collect(Collectors.toList());
         } catch (IOException e) {
             GitHubAPIWrapper.error(e.getMessage());
         }
