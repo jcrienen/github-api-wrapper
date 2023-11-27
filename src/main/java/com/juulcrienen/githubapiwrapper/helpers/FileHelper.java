@@ -52,6 +52,7 @@ public class FileHelper {
 
         if(callback != null) {
             callback.doTrigger(files);
+            GitHubAPIWrapper.info("Deleting temporary directory...");
             FileUtils.deleteQuietly(tempRepository.toFile());
         }
 
