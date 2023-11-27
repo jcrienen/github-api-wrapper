@@ -51,7 +51,7 @@ public class FileHelper {
         }
 
         if(callback != null) {
-            callback.doTrigger();
+            callback.doTrigger(files);
             FileUtils.deleteQuietly(tempRepository.toFile());
         }
 
