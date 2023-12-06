@@ -4,6 +4,7 @@ import com.juulcrienen.githubapiwrapper.GitHubAPIWrapper;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.kohsuke.github.GHRepository;
 
 import java.io.File;
@@ -50,7 +51,7 @@ public class FileHelper {
             GitHubAPIWrapper.error(e.getMessage());
         }
 
-        if(callback != null) {
+        if (callback != null) {
             callback.doTrigger(files);
             GitHubAPIWrapper.info("Deleting temporary directory...");
             FileUtils.deleteQuietly(tempRepository.toFile());
@@ -59,7 +60,7 @@ public class FileHelper {
         return files;
     }
 
-    public static List<File> getFilesFromUrl(String branch, String repositoryUrl, FileCallback callback, String... extension) throws Exception {
+    public static List<File> getFilesFromUrl(String branch, String repositoryUrl, FileCallback callback, String... extension) throws IOException, GitAPIException {
         Path tempRepository = GitHubAPIWrapper.getTemporaryFileHandler().createTempDir(repositoryUrl);
 
         String branchFull = "refs/heads/" + branch;
@@ -83,7 +84,7 @@ public class FileHelper {
             GitHubAPIWrapper.error(e.getMessage());
         }
 
-        if(callback != null) {
+        if (callback != null) {
             callback.doTrigger(files);
             GitHubAPIWrapper.info("Deleting temporary directory...");
             FileUtils.deleteQuietly(tempRepository.toFile());
