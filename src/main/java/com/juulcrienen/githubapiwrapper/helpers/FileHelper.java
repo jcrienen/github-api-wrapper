@@ -61,7 +61,9 @@ public class FileHelper {
     }
 
     public static List<File> getFilesFromUrl(String repositoryUrl, FileCallback callback, String... extension) throws IOException, GitAPIException {
-        Path tempRepository = GitHubAPIWrapper.getTemporaryFileHandler().createTempDir(repositoryUrl);
+        String[] splitRepository = repositoryUrl.split("/");
+        String repositoryName = splitRepository[1];
+        Path tempRepository = GitHubAPIWrapper.getTemporaryFileHandler().createTempDir(repositoryName);
 
         GitHubAPIWrapper.info("Cloning repository " + repositoryUrl + " into " + tempRepository.toAbsolutePath() + "...");
         Git git = Git.cloneRepository()
