@@ -58,4 +58,37 @@ public class FileHelper {
 
         return files;
     }
+
+    public static List<File> getFilesFromUrl(String branch, String repositoryUrl, FileCallback callback, String... extension) throws Exception {
+        Path tempRepository = GitHubAPIWrapper.getTemporaryFileHandler().createTempDir(repositoryUrl);
+
+        String branchFull = "refs/heads/" + branch;
+
+        GitHubAPIWrapper.info("Cloning repository " + repositoryUrl + " into " + tempRepository.toAbsolutePath() + "...");
+        Git git = Git.cloneRepository()
+                .setURI(repositoryUrl)
+                .setDirectory(tempRepository.toFile())
+                .setBranchesToClone(List.of(branchFull))
+                .setBranch(branchFull)
+                .call();
+        git.close();
+
+        List<File> files = new ArrayList<>();
+
+        try (Stream<Path> walk = Files.walk(tempRepository)) {
+            GitHubAPIWrapper.debug("Searching file tree for files with extension(s) " + Arrays.toString(extension) + "...");
+            files = walk
+                    .filter(f -> Arrays.asList(extension).contains(FilenameUtils.getExtension(f.toString()))).map(Path::toFile).collect(Collectors.toList());
+        } catch (IOException e) {
+            GitHubAPIWrapper.error(e.getMessage());
+        }
+
+        if(callback != null) {
+            callback.doTrigger(files);
+            GitHubAPIWrapper.info("Deleting temporary directory...");
+            FileUtils.deleteQuietly(tempRepository.toFile());
+        }
+
+        return files;
+    }
 }
