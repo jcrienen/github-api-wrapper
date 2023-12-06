@@ -60,17 +60,13 @@ public class FileHelper {
         return files;
     }
 
-    public static List<File> getFilesFromUrl(String branch, String repositoryUrl, FileCallback callback, String... extension) throws IOException, GitAPIException {
+    public static List<File> getFilesFromUrl(String repositoryUrl, FileCallback callback, String... extension) throws IOException, GitAPIException {
         Path tempRepository = GitHubAPIWrapper.getTemporaryFileHandler().createTempDir(repositoryUrl);
-
-        String branchFull = "refs/heads/" + branch;
 
         GitHubAPIWrapper.info("Cloning repository " + repositoryUrl + " into " + tempRepository.toAbsolutePath() + "...");
         Git git = Git.cloneRepository()
                 .setURI(repositoryUrl)
                 .setDirectory(tempRepository.toFile())
-                .setBranchesToClone(List.of(branchFull))
-                .setBranch(branchFull)
                 .call();
         git.close();
 
